@@ -17,12 +17,23 @@ Welcome! This guide will help you get started with this Neovim configuration, ev
 
 Before installing this config, you need:
 
-1. **Neovim** (version 0.9.0 or higher)
+1. **Terminal Emulator** (Highly recommend [Ghostty](https://ghostty.org))
+   - Ghostty is a fast, feature-rich terminal that works perfectly with Neovim
+   - **Mac**: Download from [ghostty.org](https://ghostty.org) or `brew install --cask ghostty`
+   - **Linux**: Follow instructions at [ghostty.org](https://ghostty.org) for your distribution
+   - **Why Ghostty?**
+     - Native performance with GPU acceleration
+     - Excellent font rendering and ligature support
+     - Built-in support for true colors and undercurl
+     - Minimal configuration needed
+   - After installing, set your font to a Nerd Font in Ghostty's config
+
+2. **Neovim** (version 0.9.0 or higher)
    - Mac: `brew install neovim`
    - Ubuntu/Debian: `sudo apt install neovim`
    - Check version: `nvim --version`
 
-2. **Required Dependencies**:
+3. **Required Dependencies**:
    - Git: `git --version`
    - Make & GCC: `make --version` and `gcc --version`
    - [Ripgrep](https://github.com/BurntSushi/ripgrep): `brew install ripgrep` or `sudo apt install ripgrep`
@@ -32,9 +43,9 @@ Before installing this config, you need:
    - Go (for Go development): `go version`
    - Rust & Cargo (for Rust development): `rustc --version`
 
-3. **Recommended**:
+4. **Recommended**:
    - A [Nerd Font](https://www.nerdfonts.com/) for icons (I recommend "JetBrainsMono Nerd Font")
-   - Set your terminal to use the Nerd Font
+   - Set your terminal to use the Nerd Font (in Ghostty: add `font-family = JetBrainsMono Nerd Font` to your config)
 
 ### Installation Steps
 
@@ -45,7 +56,7 @@ Before installing this config, you need:
 
 2. **Clone this configuration**:
    ```bash
-   git clone <your-repo-url> ~/.config/nvim
+   git clone https://github.com/binbandit/nvim ~/.config/nvim
    ```
 
 3. **First Launch**:
@@ -59,6 +70,36 @@ Before installing this config, you need:
 4. **Verify Installation**:
    - Run `:checkhealth` to see if everything is working
    - Fix any errors shown (usually missing dependencies)
+
+### Managing Plugins with Lazy
+
+This config uses **Lazy.nvim** as the plugin manager. Here's how to keep your plugins updated:
+
+#### Opening Lazy Plugin Manager
+- Press `<leader>l` (Space + l) or run `:Lazy` in command mode
+
+#### Plugin Management Commands
+In the Lazy interface:
+- **U** - Update all plugins to their latest versions
+- **u** - Update the selected plugin only
+- **i** - Install any missing plugins
+- **x** - Clean (remove) unused plugins
+- **s** - Sync (update and clean)
+- **c** - Check for plugin updates (without installing)
+- **l** - Show plugin logs
+- **r** - Restore plugins to their locked versions
+- **?** - Show help for all commands
+
+#### Best Practices
+1. **Regular Updates**: Update plugins weekly with `<leader>l` then `U`
+2. **Check Breaking Changes**: Review plugin logs (`l`) after updates
+3. **Restore if Needed**: Use `r` to restore if updates cause issues
+4. **Lock Versions**: The `lazy-lock.json` file tracks plugin versions
+
+#### Troubleshooting Plugin Issues
+- If a plugin fails to load: `:Lazy` then `i` to reinstall
+- For persistent issues: Delete the plugin folder in `~/.local/share/nvim/lazy/` and reinstall
+- Check plugin health: `:checkhealth plugin-name`
 
 ## Basic Neovim Concepts
 
