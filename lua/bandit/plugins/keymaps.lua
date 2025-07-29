@@ -83,6 +83,13 @@ return {
             { "<leader>zc", "<cmd>zc<cr>", desc = "Close current fold" },
             { "<leader>zo", "<cmd>zo<cr>", desc = "Open current fold" },
 
+            -- Learning mode
+            { "<leader>L", group = "learning" },
+            { "<leader>Lt", function() require("learning-mode").toggle() end, desc = "Toggle learning mode" },
+            { "<leader>Le", function() require("learning-mode").enable() end, desc = "Enable learning mode" },
+            { "<leader>Ld", function() require("learning-mode").disable() end, desc = "Disable learning mode" },
+            { "<leader>Lp", "<cmd>VimBeGood<cr>", desc = "Practice with VimBeGood" },
+
             -- Register group names
             { "<leader>b", group = "buffer" },
             { "<leader>q", group = "quit" },

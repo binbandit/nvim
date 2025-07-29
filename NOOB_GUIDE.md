@@ -83,6 +83,25 @@ This config uses `Space` as the leader key. Many commands start with `<leader>` 
 - `w`: Next word
 - `b`: Previous word
 
+### Learning Mode
+
+If you're new to Vim and want to practice movements and motions, this config includes a **Learning Mode** that enables helpful learning tools.
+
+To use Learning Mode:
+1. **Enable it**: Press `<Space>Lt` to toggle learning mode (or `<Space>Le` to enable)
+2. **Restart Neovim**: The changes take effect after restarting
+3. **Practice**: Press `<Space>Lp` to launch VimBeGood, an interactive game for learning Vim movements
+
+VimBeGood includes several games to practice:
+- **Basic movements**: Practice h, j, k, l navigation
+- **Word movements**: Learn w, b, e motions
+- **Delete/Change**: Practice d and c commands
+- **Visual mode**: Practice visual selections
+
+When you're comfortable with the basics:
+- Press `<Space>Ld` to disable learning mode
+- Restart Neovim to unload the learning plugins
+
 ## Key Mappings
 
 ### Essential Mappings

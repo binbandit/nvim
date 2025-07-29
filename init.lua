@@ -4,6 +4,8 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Initialize learning mode (disabled by default)
+require('learning-mode')
 
 -- Detect if running in headless mode
 vim.g.is_headless = vim.fn.has('gui_running') == 0 and (vim.fn.argc() == 0 or vim.fn.exists('$NVIM_HEADLESS') == 1)
