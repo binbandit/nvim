@@ -121,7 +121,7 @@ In the Lazy interface:
    ```
 
 #### Removing Plugins
-1. **Delete the plugin file** from `lua/bandit/plugins/` or `lua/kickstart/plugins/`
+1. **Delete the plugin file** from `lua/bandit/plugins/`
 2. **Open Neovim** and run `:Lazy`
 3. **Press `x`** to clean unused plugins
 4. **Confirm** the removal when prompted

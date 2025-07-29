@@ -4,7 +4,7 @@ A powerful, modular Neovim configuration based on kickstart.nvim with extensive 
 
 ## Features
 
-- 🚀 **Modular Plugin Architecture**: Organized plugin structure with `bandit/plugins/` and `kickstart/plugins/` directories
+- 🚀 **Modular Plugin Architecture**: All plugins organized in a single `bandit/plugins/` directory for easy management
 - 🎨 **Rich Theme Support**: Multiple themes including Oldworld, with easy theme switching
 - 📁 **Advanced File Navigation**: Oil.nvim for file management, Harpoon for quick navigation, FZF-Lua for fuzzy finding
 - 💻 **Language Support**: Pre-configured for TypeScript, Go, Rust, and more with LSP support
@@ -56,8 +56,8 @@ Lazy.nvim will automatically install all plugins on first launch.
 │   │   ├── oil.lua      # Oil.nvim file explorer
 │   │   ├── theme.lua    # Theme configurations
 │   │   └── ...          # More plugin configs
-│   └── kickstart/       # Kickstart.nvim modules
-│       └── plugins/     # Optional kickstart plugins
+│   └── kickstart/       # Kickstart.nvim health check module
+│       └── health.lua   # Configuration health checks
 ├── lazy-lock.json       # Plugin version lock file
 └── NOOB_GUIDE.md       # Beginner's guide
 
