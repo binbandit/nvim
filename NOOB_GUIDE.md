@@ -159,6 +159,12 @@ When you're comfortable with the basics:
 - `<leader>hd`: Git diff hunk
 - `<leader>hp`: Preview git hunk
 
+#### Learning Mode
+- `<leader>Lt`: Toggle learning mode
+- `<leader>Le`: Enable learning mode
+- `<leader>Ld`: Disable learning mode
+- `<leader>Lp`: Practice with VimBeGood (requires learning mode)
+
 ## Plugins Overview
 
 ### Core Functionality
