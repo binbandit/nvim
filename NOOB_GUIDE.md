@@ -96,10 +96,85 @@ In the Lazy interface:
 3. **Restore if Needed**: Use `r` to restore if updates cause issues
 4. **Lock Versions**: The `lazy-lock.json` file tracks plugin versions
 
+#### Adding New Plugins
+1. **Create a new file** in `lua/bandit/plugins/` (e.g., `my-plugin.lua`)
+2. **Add plugin specification**:
+   ```lua
+   return {
+     'username/plugin-name',
+     config = function()
+       -- Plugin configuration here
+     end,
+   }
+   ```
+3. **Save and restart** Neovim - Lazy will auto-install the plugin
+4. **Example** - Adding a color picker plugin:
+   ```lua
+   -- lua/bandit/plugins/color-picker.lua
+   return {
+     'uga-rosa/ccc.nvim',
+     event = 'BufRead',
+     config = function()
+       require('ccc').setup()
+     end,
+   }
+   ```
+
+#### Removing Plugins
+1. **Delete the plugin file** from `lua/bandit/plugins/` or `lua/kickstart/plugins/`
+2. **Open Neovim** and run `:Lazy`
+3. **Press `x`** to clean unused plugins
+4. **Confirm** the removal when prompted
+
+Alternative method:
+- Comment out the plugin in its file by adding `--` before each line
+- This keeps the config for potential future use
+
 #### Troubleshooting Plugin Issues
 - If a plugin fails to load: `:Lazy` then `i` to reinstall
 - For persistent issues: Delete the plugin folder in `~/.local/share/nvim/lazy/` and reinstall
 - Check plugin health: `:checkhealth plugin-name`
+
+### Changing the Theme
+
+This config includes multiple themes. To change the active theme:
+
+1. **Open the theme file**: `lua/bandit/plugins/theme.lua`
+2. **Available themes**:
+   - **Evergarden** - A warm, nature-inspired theme
+   - **Aetherglow** - A modern, vibrant theme (variants: `dark_bold`)
+   - **Oldworld** - A classic, muted theme (commented out by default)
+   - **Achroma** - A minimal black/white theme (currently active)
+   - **Serene Horizon** - A calm, peaceful theme (commented out)
+
+3. **To activate a theme**:
+   - Find the theme you want in the file
+   - Uncomment the `vim.cmd.colorscheme` line
+   - Comment out the current active theme's `vim.cmd.colorscheme` line
+   - Save and restart Neovim
+
+4. **Example - Switch to Evergarden**:
+   ```lua
+   -- In the Evergarden config function:
+   config = function()
+       require('evergarden').setup({
+           variant = 'winter',  -- or 'summer'
+       })
+       vim.cmd.colorscheme 'evergarden'  -- Uncomment this line
+   end,
+   
+   -- In the Achroma config function:
+   config = function()
+       require("achroma").setup({
+           mode = "dark",
+           variant = "black",
+           inverse_popup = true,
+       })
+       -- vim.cmd.colorscheme("achroma")  -- Comment this line
+   end,
+   ```
+
+5. **Quick theme preview**: Try a theme temporarily with `:colorscheme theme-name`
 
 ## Basic Neovim Concepts
 
