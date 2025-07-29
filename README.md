@@ -4,7 +4,7 @@ A powerful, modular Neovim configuration based on kickstart.nvim with extensive 
 
 ## Features
 
-- 🚀 **Modular Plugin Architecture**: Organized plugin structure with `god/plugins/` and `kickstart/plugins/` directories
+- 🚀 **Modular Plugin Architecture**: Organized plugin structure with `bandit/plugins/` and `kickstart/plugins/` directories
 - 🎨 **Rich Theme Support**: Multiple themes including Oldworld, with easy theme switching
 - 📁 **Advanced File Navigation**: Oil.nvim for file management, Harpoon for quick navigation, FZF-Lua for fuzzy finding
 - 💻 **Language Support**: Pre-configured for TypeScript, Go, Rust, and more with LSP support
@@ -49,7 +49,7 @@ Lazy.nvim will automatically install all plugins on first launch.
 ~/.config/nvim/
 ├── init.lua              # Main configuration file
 ├── lua/
-│   ├── god/plugins/     # Custom plugin configurations
+│   ├── bandit/plugins/     # Custom plugin configurations
 │   │   ├── flash.lua    # Flash.nvim for quick navigation
 │   │   ├── fzf-lua.lua  # FZF-Lua fuzzy finder
 │   │   ├── harpoon.lua  # Harpoon for file marks
@@ -105,10 +105,10 @@ See the [NOOB_GUIDE.md](NOOB_GUIDE.md) for a complete list of keybindings.
 
 ### Adding Plugins
 
-Add new plugins in `lua/god/plugins/` directory:
+Add new plugins in `lua/bandit/plugins/` directory:
 
 ```lua
--- lua/god/plugins/my-plugin.lua
+-- lua/bandit/plugins/my-plugin.lua
 return {
   'username/plugin-name',
   config = function()

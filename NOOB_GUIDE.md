@@ -236,8 +236,8 @@ This config uses `Space` as the leader key. Many commands start with `<leader>` 
 4. **Learn text objects**: `ciw` (change inner word), `di"` (delete inside quotes)
 
 ### Customization
-- Personal keymaps: Add to `lua/god/plugins/keymaps.lua`
-- New plugins: Create files in `lua/god/plugins/`
+- Personal keymaps: Add to `lua/bandit/plugins/keymaps.lua`
+- New plugins: Create files in `lua/bandit/plugins/`
 - LSP settings: Modify in `init.lua` (servers table)
 
 ## Troubleshooting

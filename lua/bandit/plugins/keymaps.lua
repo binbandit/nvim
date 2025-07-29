@@ -14,13 +14,13 @@ return {
             { "<leader>qQ", "<cmd>qa!<cr>", desc = "Force quit all" },
             
             -- Buffer management
-            { "<leader>bd", function() require("god.utils.buffer-close").close_buffer(false) end, desc = "Delete buffer (smart)" },
-            { "<leader>bD", function() require("god.utils.buffer-close").close_buffer(true) end, desc = "Force delete buffer (smart)" },
+            { "<leader>bd", function() require("bandit.utils.buffer-close").close_buffer(false) end, desc = "Delete buffer (smart)" },
+            { "<leader>bD", function() require("bandit.utils.buffer-close").close_buffer(true) end, desc = "Force delete buffer (smart)" },
             { "<leader>bn", "<cmd>bnext<cr>", desc = "Next buffer" },
             { "<leader>bp", "<cmd>bprevious<cr>", desc = "Previous buffer" },
             { "<leader>ba", "<cmd>ball<cr>", desc = "Open all buffers" },
-            { "<leader>bc", function() require("god.utils.buffer-close").close_and_next() end, desc = "Close buffer and go to next" },
-            { "<leader>bC", function() require("god.utils.buffer-close").close_all_except_current() end, desc = "Close all buffers except current" },
+            { "<leader>bc", function() require("bandit.utils.buffer-close").close_and_next() end, desc = "Close buffer and go to next" },
+            { "<leader>bC", function() require("bandit.utils.buffer-close").close_all_except_current() end, desc = "Close all buffers except current" },
             { "<leader>`", "<cmd>b#<cr>", desc = "Toggle between buffers" },
             
             -- Save mappings (moved to avoid conflict with window group)
