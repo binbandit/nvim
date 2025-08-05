@@ -6,10 +6,19 @@ return {
 		lazy = false,
 		priority = 1000,
 		config = function()
-			-- require('evergarden').setup({
-			--     variant = 'winter',
-			-- })
-			-- vim.cmd.colorscheme 'evergarden'
+			require("evergarden").setup({
+				variant = "winter",
+			})
+			vim.cmd.colorscheme("evergarden")
+		end,
+	},
+
+	{
+		"binbandit/AutumnCozy.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			-- require("autumncozy").setup()
 		end,
 	},
 
@@ -76,11 +85,11 @@ return {
 		lazy = false,
 		priority = 1000,
 		config = function()
-			require("achroma").setup({
-				mode = "dark",
-				variant = "black",
-				inverse_popup = true,
-			})
+			-- require("achroma").setup({
+			-- 	mode = "dark",
+			-- 	variant = "black",
+			-- 	inverse_popup = true,
+			-- })
 			-- vim.cmd.colorscheme("achroma")
 		end,
 	},

@@ -5,7 +5,7 @@ return {
 	cond = not vim.g.is_headless,
 	opts = {
 		options = {
-			theme = "achroma",
+			theme = "evergarden",
 			component_separators = "",
 			section_separators = { left = "", right = "" },
 			disabled_filetypes = {
