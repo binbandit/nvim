@@ -129,7 +129,12 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 
 -- Save file with Cmd+S and Ctrl+S
 vim.keymap.set({'n', 'i', 'v'}, '<D-s>', '<cmd>w<CR>', { desc = 'Save file' })
-vim.keymap.set({'n', 'i', 'v'}, '<C-s>', '<cmd>w<CR>', { desc = 'Save file' })
+-- For normal mode, just save
+vim.keymap.set('n', '<C-s>', '<cmd>w<CR>', { desc = 'Save file' })
+-- For insert mode, save and stay in insert mode
+vim.keymap.set('i', '<C-s>', '<cmd>w<CR>a', { desc = 'Save file' })
+-- For visual mode, save and return to normal mode
+vim.keymap.set('v', '<C-s>', '<cmd>w<CR>', { desc = 'Save file' })
 
 -- Split window vertically with <leader>|
 vim.keymap.set('n', '<leader>|', '<cmd>vsplit<CR>', { desc = 'Split window vertically' })

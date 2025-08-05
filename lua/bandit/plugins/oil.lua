@@ -17,9 +17,13 @@ return {
                 signcolumn = "auto"
             },
             keymaps = {
-                ["<C-s>"] = function()
-                    require("oil").save()
-                end,
+                ["<C-s>"] = {
+                    callback = function()
+                        require("oil").save()
+                    end,
+                    mode = "n",
+                    desc = "Save changes in Oil"
+                },
             }
         },
         dependencies = { {
