@@ -75,13 +75,13 @@ return {
                 desc = "Format Rust file" 
             },
             
-            -- Folding
+            -- Folding (some handled by nvim-ufo plugin)
             { "<leader>z", group = "fold" },
-            { "<leader>za", "<cmd>za<cr>", desc = "Toggle fold" },
-            { "<leader>zR", "<cmd>zR<cr>", desc = "Open all folds" },
-            { "<leader>zM", "<cmd>zM<cr>", desc = "Close all folds" },
-            { "<leader>zc", "<cmd>zc<cr>", desc = "Close current fold" },
-            { "<leader>zo", "<cmd>zo<cr>", desc = "Open current fold" },
+            { "<leader>za", "za", desc = "Toggle fold" },
+            { "<leader>zc", "zc", desc = "Close current fold" },
+            { "<leader>zo", "zo", desc = "Open current fold" },
+            { "<leader>zj", "zj", desc = "Next fold" },
+            { "<leader>zk", "zk", desc = "Previous fold" },
 
             -- Learning mode
             { "<leader>L", group = "learning" },
