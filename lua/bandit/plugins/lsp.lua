@@ -21,6 +21,13 @@ require "typescript-tools".setup({
       enable = true,
       filetypes = { "javascriptreact", "typescriptreact" }
     },
+    tsserver_file_preferences = {
+      includeInlayParameterNameHints = "all",
+      includeInlayEnumMemberValueHints = true,
+      includeInlayFunctionLikeReturnTypeHints = true,
+      includeCompletionsForModuleExports = true,
+      quotePreference = "auto"
+    },
     tsserver_plugins = {
       "@styled/typescript-styled-plugins",
     }
