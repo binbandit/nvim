@@ -8,27 +8,18 @@ vim.pack.add({
 })
 
 -- LSP
-local servers = { "lua_ls", "biome", "tinymist", "emmetls" }
+local servers = { "lua_ls", "biome", "emmetls" }
 local server_names = vim.tbl_keys(servers)
 
 vim.lsp.enable(servers)
 require "nvim-treesitter.configs".setup({
-  ensure_installed = { "typescript", "javascript" },
+  ensure_installed = { "typescript", "javascript", "css" },
   highlight = { enable = true }
 })
 
 -- mason
 
 require "mason".setup({
-  ui = {
-    border = "rounded", -- Use rounded borders for the Mason window
-    icons = {
-      package_installed = "✅",
-      package_pending = "⏳",
-      package_uninstalled = "❌"
-    }
-  },
-
   -- Pip configuration
   pip = {
     upgrade_pip = true,
@@ -37,24 +28,4 @@ require "mason".setup({
 })
 
 -- completion
-require "blink.cmp".setup({
-  keymap = { preset = "default" },
-  appearance = {
-    nerd_font_variant = 'mono'
-  },
-  completion = {
-    -- only show the documentation popup when manually triggered
-    documentation = { auto_show = false },
-  },
-  sources = {
-    default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
-    providers = {
-      lazydev = {
-        name = "LazyDev",
-        module = "lazydev.integrations.blink",
-        score_offset = 100,
-      },
-    },
-  },
-  fuzzy = { implementation = 'lua' },
-})
+require "blink.cmp".setup()
