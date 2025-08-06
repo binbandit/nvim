@@ -1,4 +1,5 @@
 local km = vim.keymap
+local bufnr = vim.api.nvim_get_current_buf()
 
 km.set('n', '<leader>o', ':update<CR> :source<CR>')
 
@@ -6,12 +7,18 @@ km.set('n', '<leader>o', ':update<CR> :source<CR>')
 km.set("n", "<leader>qq", "<cmd>qa<CR>", { desc = "quit all" })
 
 -- save
-km.set("n", "<C-s>", ":write<CR>", { desc = "save file" }) -- save in normal mode, return to normal mode
+km.set("n", "<C-s>", ":write<CR>", { desc = "save file" })  -- save in normal mode, return to normal mode
 km.set("i", "<C-s>", "<cmd>w<CR>a", { desc = "save file" }) -- save in edit mode, and return to edit mode
 km.set("v", "<C-s>", "<cmd>w<CR>a", { desc = "save file" }) -- save in visual mode, and return to normal mode
 
 -- code
 km.set("n", "<leader>lf", vim.lsp.buf.format, { desc = "format file" })
+km.set("n", "<leader>a", function()
+  vim.cmd.RustLsp('codeAction')
+end, { silent = true, buffer = bufnr, desc = "Launch code actions" })
+km.set("n", "K", function()
+  vim.cmd.RustLsp({ 'hover', 'actions' })
+end, { silent = true, buffer = bufnr })
 
 -- navigation
 km.set("n", "<leader>e", ":Oil<CR>", { desc = "Open file navigator" })
