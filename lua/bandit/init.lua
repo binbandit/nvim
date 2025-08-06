@@ -1,0 +1,5 @@
+require('bandit.set')
+require('bandit.theme')
+require('bandit.plugins')
+require('bandit.keys')
+require('bandit.extra')
