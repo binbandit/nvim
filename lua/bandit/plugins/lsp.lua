@@ -6,7 +6,6 @@ vim.pack.add({
   { src = "https://github.com/folke/lazydev.nvim" },              -- proper lua completion
   { src = "https://github.com/mason-org/mason.nvim" },            -- mason for language server install
   { src = "https://github.com/pmizio/typescript-tools.nvim" },    -- better typescript LSP
-  { src = "https://github.com/mrcjkb/rustaceanvim" },             -- better rust LSP
   { src = "https://github.com/ray-x/go.nvim" },                   -- better golsp
 })
 

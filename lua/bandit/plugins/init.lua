@@ -2,6 +2,7 @@ vim.pack.add({ "https://github.com/nvim-lua/plenary.nvim" }) -- adds plenary req
 require('bandit.plugins.lsp')
 require('bandit.plugins.lualine')
 require('bandit.plugins.venn')
+require('bandit.plugins.rust')
 
 vim.pack.add({
   -- Navigation
