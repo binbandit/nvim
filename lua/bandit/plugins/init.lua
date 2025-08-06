@@ -1,8 +1,13 @@
+vim.pack.add({ "https://github.com/nvim-lua/plenary.nvim" }) -- adds plenary required by lots of plugins
+require('bandit.plugins.lsp')
+require('bandit.plugins.lualine')
+require('bandit.plugins.venn')
+
 vim.pack.add({
   -- Navigation
   { src = "https://github.com/benomahony/oil-git.nvim" }, -- git config for oil
-  { src = "https://github.com/stevearc/oil.nvim" },    -- file explorer
-  { src = "https://github.com/echasnovski/mini.pick" }, -- quick and easy file picker
+  { src = "https://github.com/stevearc/oil.nvim" },       -- file explorer
+  { src = "https://github.com/echasnovski/mini.pick" },   -- quick and easy file picker
 
   -- Coding
   { src = "https://github.com/echasnovski/mini.ai" },       -- extends `a`/`i` text objects
@@ -12,13 +17,38 @@ vim.pack.add({
   { src = "https://github.com/windwp/nvim-autopairs" },     -- automatic bracket pairs
 
   -- General
-  { src = "https://github.com/nvim-lua/plenary.nvim" }, -- required by most plugins
-  { src = "https://github.com/mbbill/undotree" },       -- better undo tree
+  { src = "https://github.com/mbbill/undotree" },                           -- better undo tree
+  { src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" }, -- Pretty markdown
 
+  -- UI
+  { src = "https://github.com/mluders/comfy-line-numbers.nvim" }, -- Easier relative line numbers
+  { src = "https://github.com/folke/twilight.nvim" },             -- Only highlight what your working on
+  { src = "https://github.com/code-biscuits/nvim-biscuits" },     -- show context at the end of the `}`
+  { src = "https://github.com/folke/which-key.nvim" }, -- whichkey
 })
 
-require('bandit.plugins.lsp')
-require('bandit.plugins.lualine')
+require "render-markdown".setup({})
+require "comfy-line-numbers".setup()
+require "twilight".setup({
+  dimming = {
+    alpha = 0.3, -- amount of dimming
+    -- we try to get the foreground from the hightlight groups or fallback color
+    color = { "Normal", "#ffffff" },
+    term_bg = "#000000", -- if guibg=NONE, this will be used to calculate text color
+    inactive = true,     -- when true, other windows will be fully dimmed (unless they contain the same buffer)
+  },
+  context = 7,           -- the amount of lines we will try and show around the current line
+  treesitter = true,     -- use treesitter when available for the filetype
+  -- treesitter is used to automatically expand the visible text,
+  -- but you can further control the types of nodes that should always be fully expanded
+  expand = { -- for treesitter, we always try to expand to the top-most ancestor with these types
+    "function",
+    "method",
+    "table",
+    "if_statement",
+  },
+  exclude = {}, -- exclude these filetypes
+})
 
 -- mini
 require "mini.map".setup({

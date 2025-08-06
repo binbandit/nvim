@@ -32,3 +32,6 @@ km.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- undo
 km.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = "Toggle the undo tree" })
+
+-- ui
+km.set('n', '<leader>tt', ":Twilight<CR>", { desc = "Toggle twilight" })
