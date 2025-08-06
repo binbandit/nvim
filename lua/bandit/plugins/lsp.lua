@@ -8,10 +8,6 @@ vim.pack.add({
 })
 
 -- LSP
-local servers = { "lua_ls", "biome", "emmetls" }
-local server_names = vim.tbl_keys(servers)
-
-vim.lsp.enable(servers)
 require "nvim-treesitter.configs".setup({
   ensure_installed = { "typescript", "javascript", "css" },
   highlight = { enable = true }
@@ -28,4 +24,24 @@ require "mason".setup({
 })
 
 -- completion
-require "blink.cmp".setup()
+require "blink.cmp".setup({
+  keymap = { preset = "default" },
+  appearance = {
+    use_nvim_cmp_as_default = true,
+    nerd_font_variant = 'mono'
+  },
+  signature = { enabled = true }
+})
+
+-- lsp
+-- List of servers to set up
+local servers = { "lua_ls", "biome" }  -- Add servers you need here
+
+vim.lsp.enable(servers)
+
+local lspconfig = require("lspconfig")
+local capabilities = require("blink.cmp").get_lsp_capabilities()
+
+for _, server in ipairs(servers) do
+  lspconfig[server].setup({ capabilities = capabilities })
+end
