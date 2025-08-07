@@ -62,19 +62,60 @@ require "blink.cmp".setup({
     use_nvim_cmp_as_default = true,
     nerd_font_variant = 'mono'
   },
-  fuzzy = { implementation = "lua" },
+  fuzzy = {
+    prebuilt_binaries = {
+      download = false,  -- Don't download prebuilt binaries
+    }
+  },
   signature = { enabled = true }
 })
 
 -- lsp
--- List of servers to set up
-local servers = { "lua_ls" } -- Add servers you need here
-
-vim.lsp.enable(servers)
-
 local lspconfig = require("lspconfig")
 local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-for _, server in ipairs(servers) do
-  lspconfig[server].setup({ capabilities = capabilities })
-end
+-- Lua LSP with proper Neovim support
+lspconfig.lua_ls.setup({
+  capabilities = capabilities,
+  on_init = function(client)
+    if client.workspace_folders then
+      local path = client.workspace_folders[1].name
+      if
+        path ~= vim.fn.stdpath('config')
+        and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+      then
+        return
+      end
+    end
+
+    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua or {}, {
+      runtime = {
+        -- Tell the language server which version of Lua you're using
+        version = 'LuaJIT',
+        -- Setup your lua path
+        path = {
+          'lua/?.lua',
+          'lua/?/init.lua',
+        },
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = { 'vim' },
+      },
+      workspace = {
+        checkThirdParty = false,
+        library = {
+          vim.env.VIMRUNTIME,
+          -- Add lazydev.nvim types
+          '${3rd}/luv/library',
+        },
+      },
+      telemetry = {
+        enable = false,
+      },
+    })
+  end,
+  settings = {
+    Lua = {}
+  }
+})

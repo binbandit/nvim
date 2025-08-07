@@ -1,4 +1,5 @@
 vim.pack.add({ "https://github.com/nvim-lua/plenary.nvim" }) -- adds plenary required by lots of plugins
+vim.pack.add({ "https://github.com/nvim-tree/nvim-web-devicons" }) -- icons for fzf-lua
 require('bandit.plugins.lsp')
 require('bandit.plugins.lualine')
 require('bandit.plugins.venn')
@@ -6,9 +7,9 @@ require('bandit.plugins.rust')
 
 vim.pack.add({
   -- Navigation
-  { src = "https://github.com/benomahony/oil-git.nvim" }, -- git config for oil
+  -- { src = "https://github.com/benomahony/oil-git.nvim" }, -- Commented out for performance
   { src = "https://github.com/stevearc/oil.nvim" },       -- file explorer
-  { src = "https://github.com/echasnovski/mini.pick" },   -- quick and easy file picker
+  { src = "https://github.com/ibhagwan/fzf-lua" },        -- powerful fuzzy finder
 
   -- Coding
   { src = "https://github.com/echasnovski/mini.ai" },       -- extends `a`/`i` text objects
@@ -88,34 +89,68 @@ require "nvim-autopairs".setup({
 })
 
 -- navigation
-require "mini.pick".setup()
-require "oil-git".setup()
-require "oil".setup({
-  default_file_explorer = true,
-  columns = {
-    "icon",
+require "fzf-lua".setup({
+  -- Minimal preset for clean look
+  'telescope',
+  winopts = {
+    -- Position window in bottom left like mini.pick
+    height = 0.4,
+    width = 0.5,
+    row = 1,  -- bottom
+    col = 0,  -- left
+    border = 'rounded',
+    preview = {
+      hidden = 'hidden',  -- Hide preview by default for minimal look
+      vertical = 'up:40%',
+      horizontal = 'right:50%',
+    }
   },
-  delete_to_trash = true,
-  skip_confirm_for_simple_edits = true,
-  prompt_save_on_select_new_entry = true,
-  cleanup_delay_ms = 200,
-  experimental_watch_for_changes = true,
-  keymaps_help = {
-    border = "rounded"
-  },
-  use_default_keymaps = true,
-  view_options = {
-    show_hiden = false,
-    is_hidden_file = function(name, bufnr)
-      return vim.startswith(name, ".")
-    end,
-    is_always_hidden = function(name, bufnr)
-      return false
-    end,
-    natural_order = true,
-    sort = {
-      { "type", "asc" },
-      { "name", "asc" },
+  keymap = {
+    builtin = {
+      ['<C-d>'] = 'preview-page-down',
+      ['<C-u>'] = 'preview-page-up',
+    },
+    fzf = {
+      ['ctrl-q'] = 'select-all+accept',
     },
   },
+  files = {
+    prompt = 'Files> ',
+    cwd_prompt = false,
+    git_icons = false,  -- Minimal look without git icons
+    file_icons = true,
+    fd_opts = "--color=never --type f --hidden --follow --exclude .git",
+  },
+  grep = {
+    prompt = 'Grep> ',
+    rg_opts = "--hidden --column --line-number --no-heading " ..
+              "--color=always --smart-case --max-columns=512",
+  },
 })
+-- require "oil-git".setup()  -- Disabled for performance
+--@type oil.SetupOpts
+require "oil".setup {
+  default_file_explorer = true,
+  delete_to_trash = true,
+  skip_confirm_for_simple_edits = true,
+  cleanup_delay_ms = 100,  -- Reduced from 1000ms for better performance
+  use_default_keymaps = true,
+  view_options = {
+    show_hidden = false,  -- Changed to false for better performance
+    is_always_hidden = function(name, bufnr)
+      return vim.startswith(name, ".git")
+    end,
+  },
+  win_options = {
+    signcolumn = "auto"
+  },
+  keymaps = {
+    ["<C-s>"] = {
+      callback = function()
+        require("oil").save()
+      end,
+      mode = "n",
+      desc = "Save changes in Oil"
+    },
+  }
+}

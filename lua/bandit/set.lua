@@ -35,7 +35,7 @@ o.backspace = "indent,eol,start" -- allow backspace on indent, end of line or in
 o.clipboard = "unnamedplus" -- use system clipboard
 
 -- split windows
-o.splitright = ture -- split vertical window to the right
+o.splitright = true -- split vertical window to the right
 o.splitbelow = true -- split horizontal window to the botttom
 
 -- turn off swapfile
@@ -46,7 +46,7 @@ o.updatetime = 50
 o.hlsearch = false
 o.incsearch = true
 
-o.scrolloff = 999
+o.scrolloff = 8  -- Reduced from 999 for better performance
 
 o.winborder = "rounded"
 

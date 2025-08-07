@@ -22,8 +22,10 @@ end, { silent = true, buffer = bufnr })
 
 -- navigation
 km.set("n", "<leader>e", ":Oil<CR>", { desc = "Open file navigator" })
-km.set("n", "<leader><leader>", ":Pick files<CR>", { desc = "find files" })
-km.set("n", "<leader>?", ":Pick help<CR>", { desc = "find help" })
+km.set("n", "<leader><leader>", ":FzfLua files<CR>", { desc = "find files" })
+km.set("n", "<leader>?", ":FzfLua help_tags<CR>", { desc = "find help" })
+km.set("n", "<leader>fg", ":FzfLua live_grep<CR>", { desc = "live grep" })
+km.set("n", "<leader>fb", ":FzfLua buffers<CR>", { desc = "find buffers" })
 km.set("n", "<leader>mm", MiniMap.toggle, { desc = "open minimap" })
 
 -- window management
