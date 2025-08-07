@@ -63,6 +63,7 @@ require "blink.cmp".setup({
     nerd_font_variant = 'mono'
   },
   fuzzy = {
+    implementation = "lua",
     prebuilt_binaries = {
       download = false,  -- Don't download prebuilt binaries
     }
