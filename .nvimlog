@@ -1,0 +1,14 @@
+WRN 2025-08-11T19:57:35.950 ?.61534    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/iZVb8b/nvim.61534.0
+WRN 2025-08-11T20:07:02.667 ?.62542    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/qUxbQC/nvim.62542.0
+WRN 2025-08-11T20:09:44.450 ?.62868    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/PCptX0/nvim.62868.0
+WRN 2025-08-11T20:14:12.879 ?.63447    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/1x4yv9/nvim.63447.0
+WRN 2025-08-11T20:42:11.426 ?.68840    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/ajzBIg/nvim.68840.0
+WRN 2025-08-11T20:42:11.476 ?.68840    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/ajzBIg/fzf-lua.1754908931.68840.1
+WRN 2025-08-11T20:47:54.413 ?.69027    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/KADGGt/nvim.69027.0
+WRN 2025-08-11T20:47:54.462 ?.69027    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/KADGGt/fzf-lua.1754909274.69027.1
+WRN 2025-08-11T20:49:47.233 ?.69156    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/4T5TyM/nvim.69156.0
+WRN 2025-08-11T20:49:47.267 ?.69156    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/4T5TyM/fzf-lua.1754909387.69156.1
+WRN 2025-08-11T20:54:53.615 ?.70434    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/0aZCgv/nvim.70434.0
+WRN 2025-08-11T20:54:53.679 ?.70434    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/0aZCgv/fzf-lua.1754909693.70434.1
+WRN 2025-08-11T21:05:41.763 ?.70885    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/dwzQu8/nvim.70885.0
+WRN 2025-08-11T21:05:41.804 ?.70885    server_start:193: Failed to start server: operation not permitted: /var/folders/yg/yxjdrxbn675bn8g65spt78q40000gn/T/nvim.501/dwzQu8/fzf-lua.1754910341.70885.1
