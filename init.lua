@@ -1,6 +1,7 @@
 --- locals ---
-local pack = require("mypack")
+local pack = require('pack')
 local o = vim.o
+local opt = vim.opt
 local g = vim.g
 local km = vim.keymap
 local autocmd = vim.api.nvim_create_autocmd
@@ -22,9 +23,20 @@ pack.add({
     { src = "Koalhack/darcubox-nvim",        lazy = true },  -- Darcubox
     { src = "stevedylandev/darkmatter-nvim", lazy = true },  -- Darkmatter
     { src = "mcauley-penney/techbase.nvim",  lazy = true },  -- techbase
+    { src = "mitch1000/backpack.nvim", lazy = true }, -- backpack
 })
 
-vim.cmd.colorscheme("jellybeans")
+-- require "jellybeans".setup {
+--     transparent = true
+-- }
+require "backpack".setup {
+    transparent = true,
+    theme = "dark",
+    contrast = "medium", -- medium, high, extreme
+}
+vim.cmd.colorscheme("backpack")
+vim.cmd([[ set notermguicolors ]])
+-- vim.cmd.colorscheme("jellybeans")
 
 --- lsp ---
 pack.add({
@@ -35,23 +47,75 @@ pack.add({
         build = ":TSUpdate",
         lazy = false
     },                                                                 -- syntax highlighting
-    { src = "saghen/blink.cmp",     build = "cargo build --release" }, -- blink completion
+    { src = "saghen/blink.cmp",     build = "cargo build --release" }, -- blink completion on master
     { src = "mason-org/mason.nvim" },                                  -- mason for language server install
+    { src = "neovim/nvim-lspconfig" },                                 -- core LSP configs
+    { src = "williamboman/mason-lspconfig.nvim" },                     -- mason bridge for lspconfig
     { src = "mrcjkb/rustaceanvim" },                                   -- better rust LSP
     { src = "saecki/crates.nvim" },                                    -- better crate helpers
 })
 
 local langs = { 'lua_ls', 'gopls', 'jsonls', 'yamlls', 'bashls', 'html', 'cssls', 'pyright', 'emmet_ls' }
-vim.lsp.enable(langs)
 
--- auto fold imports
-autocmd("LspNotify", {
+-- LSP: install and attach
+require('mason').setup {
+    ensure_installed = langs,
+    pip = {
+        upgrade_pip = true,
+        install_args = { "--no-cache-dir" },
+    }
+}
+require('mason-lspconfig').setup({ ensure_installed = langs })
+
+-- Basic LSP keymaps so gd uses LSP definition (not Vim's local declaration)
+autocmd('LspAttach', {
     callback = function(args)
-        if args.data.method == "textDocument/didOpen" then
-            vim.lsp.foldclose('imports', vim.fn.bufwinid(args.buf))
-        end
+        local buf = args.buf
+        local opts = { buffer = buf, silent = true }
+        km.set('n', 'gd', vim.lsp.buf.definition, opts)
+        km.set('n', 'gD', vim.lsp.buf.declaration, opts)
+        km.set('n', 'gr', vim.lsp.buf.references, opts)
+        km.set('n', 'gI', vim.lsp.buf.implementation, opts)
+        km.set('n', 'K', vim.lsp.buf.hover, opts)
+        km.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+        km.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+        -- LSP group under <leader>l for which-key
+        km.set('n', '<leader>lr', vim.lsp.buf.rename, vim.tbl_extend('force', opts, { desc = 'LSP rename' }))
+        km.set('n', '<leader>la', vim.lsp.buf.code_action, vim.tbl_extend('force', opts, { desc = 'LSP code action' }))
     end,
 })
+
+local lspconfig = require('lspconfig')
+local ok_mlsp, mlsp = pcall(require, 'mason-lspconfig')
+if ok_mlsp and type(mlsp.setup_handlers) == 'function' then
+    mlsp.setup_handlers({
+        function(server)
+            if server == 'rust_analyzer' then
+                -- Let rustaceanvim manage rust-analyzer
+                return
+            end
+            lspconfig[server].setup({})
+        end,
+        -- Explicit no-op for rust to be extra safe
+        ['rust_analyzer'] = function() end,
+    })
+else
+    -- Fallback: directly setup our desired servers
+    for _, server in ipairs(langs) do
+        if server ~= 'rust_analyzer' then
+            lspconfig[server].setup({})
+        end
+    end
+end
+
+-- auto fold imports
+-- autocmd("LspNotify", {
+--     callback = function(args)
+--         if args.data.method == "textDocument/didOpen" then
+--             vim.lsp.foldclose('imports', vim.fn.bufwinid(args.buf))
+--         end
+--     end,
+-- })
 
 require "nvim-treesitter.configs".setup {
     ensure_installed = { "lua", "vim", "markdown", "markdown_inline", "bash", "python", "rust", "typescript", "javascript", "css" },
@@ -59,20 +123,22 @@ require "nvim-treesitter.configs".setup {
         enable = true,
     },
 }
-require "mason".setup {
-    ensure_installed = langs,
-    pip = {
-        upgrade_pip = true,
-        install_args = { "--no-cache-dir" },
-    }
-}
 require "blink.cmp".setup {
     keymap = { preset = "super-tab" },
     appearance = {
         use_nvim_cmp_as_default = true,
         nerd_font_variant = 'mono'
     },
-    signature = { enabled = true }
+    signature = { enabled = true },
+    -- Prefer Rust fuzzy engine if present; pinning to a tag allows prebuilt download.
+    fuzzy = {
+        implementation = 'prefer_rust',
+        prebuilt_binaries = {
+            -- If you ever see version mismatch warnings, keep this true
+            -- or run :PackSync to rebuild at the pinned tag.
+            ignore_version_mismatch = true,
+        },
+    },
 }
 g.rustaceanvim = {
     -- Plugin configuration
@@ -203,6 +269,7 @@ require "mini.jump2d".setup {}
 --- coding ---
 pack.add({
   { src = "supermaven-inc/supermaven-nvim" }, -- ai autocomplete
+  { src = "ruifm/gitlinker.nvim" },          -- copy/open Git remote links
 })
 
 require "supermaven-nvim".setup {
@@ -213,6 +280,16 @@ require "supermaven-nvim".setup {
   },
   log_level = "warn",
 }
+
+-- Git remote link copier
+require('gitlinker').setup({
+  opts = {
+    -- Copy to system clipboard by default
+    action_callback = require('gitlinker.actions').copy_to_clipboard,
+    add_current_line_on_normal_mode = true,
+    print_url = false,
+  },
+})
 
 
 --- ui ---
@@ -225,7 +302,10 @@ pack.add({
     { src = "mbbill/undotree" },                 -- better undo tree
     { src = 'akinsho/toggleterm.nvim' },         -- toggle terminal
     { src = 'nvim-lualine/lualine.nvim' }, -- lualine
+    { src = "dmtrKovalenko/fff.nvim", lazy = true, build = "cargo build --release" }, -- fastest file searcher.
+    { src = "folke/which-key.nvim" },            -- which-key helper
 })
+
 require "mini.pick".setup {}
 require "oil".setup {
     default_file_explorer = true,
@@ -305,6 +385,11 @@ require "toggleterm".setup {
     },
 }
 
+-- Simple command to pull updates and run build hooks
+vim.api.nvim_create_user_command('PackSync', function()
+  require('pack').update_all()
+end, {})
+
 local Terminal = require('toggleterm.terminal').Terminal
 local lazygit = Terminal:new({
     cmd = "lazygit",
@@ -329,6 +414,87 @@ end
 require 'lualine'.setup {
   theme = 'auto',
 }
+
+-- which-key: show keybinding hints
+pcall(function()
+  local wk = require('which-key')
+  if type(wk.setup) == 'function' then
+    wk.setup({
+      plugins = { spelling = true },
+      window = { border = 'rounded' },
+      show_help = true,
+    })
+  end
+
+  -- Register common groups; mapping desc will be read automatically
+  if type(wk.add) == 'function' then
+    wk.add({
+      { '<leader>g', group = 'Git' },
+      { '<leader>z', group = 'Folds' },
+      { '<leader>w', group = 'Windows' },
+      { '<leader>t', group = 'Toggle/Tools' },
+      { '<leader>l', group = 'LSP' },
+    })
+  elseif type(wk.register) == 'function' then
+    wk.register({
+      g = { name = 'Git' },
+      z = { name = 'Folds' },
+      w = { name = 'Windows' },
+      t = { name = 'Toggle/Tools' },
+      l = { name = 'LSP' },
+    }, { prefix = '<leader>' })
+  end
+end)
+--- smart save helper ---
+local function smart_save()
+  local buf = vim.api.nvim_get_current_buf()
+  local bo = vim.bo[buf]
+
+  -- Skip non-file buffers politely
+  if bo.buftype ~= '' then
+    if bo.buftype == 'terminal' or bo.buftype == 'nofile' or bo.buftype == 'help' or bo.buftype == 'quickfix' or bo.buftype == 'prompt' then
+      vim.notify('Nothing to save for this buffer', vim.log.levels.INFO)
+      return
+    end
+  end
+
+  if not bo.modifiable then
+    vim.notify('Buffer is not modifiable', vim.log.levels.WARN)
+    return
+  end
+
+  -- Unnamed buffers: user opted out of prompting; skip
+  local name = vim.api.nvim_buf_get_name(buf)
+  if name == '' then
+    vim.notify('No filename. Skipping save.', vim.log.levels.INFO)
+    return
+  end
+
+  -- Ensure parent dir exists for named buffers
+  local dir = vim.fn.fnamemodify(name, ':p:h')
+  if dir ~= '' and vim.fn.isdirectory(dir) == 0 then
+    vim.fn.mkdir(dir, 'p')
+  end
+  -- Prefer :update (write only if changed)
+  local ok, err = pcall(vim.cmd.update)
+  if ok then return end
+  -- Permission denied or other error: try sudo tee fallback
+  local msg = tostring(err or '')
+  if msg:match('E212') or msg:lower():match('permission') then
+    local tmp = vim.fn.tempname()
+    -- Write to a temp file first to avoid clobbering
+    local wrote_tmp = pcall(vim.cmd.write, vim.fn.fnameescape(tmp))
+    if wrote_tmp then
+      local cmd = string.format('silent keepalt execute "!sudo tee %s > /dev/null < %s"', vim.fn.shellescape(name), vim.fn.shellescape(tmp))
+      vim.cmd(cmd)
+      -- Reload from disk to pick up correct perms/mtime
+      pcall(vim.cmd.edit)
+      vim.fn.delete(tmp)
+      return
+    end
+  end
+  vim.notify('Save failed: ' .. msg, vim.log.levels.ERROR)
+end
 --- settings ---
 -- line numbers
 o.number = true         -- show line numbers
@@ -402,6 +568,45 @@ g.netrw_winsize = 25     -- setting window size
 g.loaded_netrw = 1
 g.loaded_netrwPlugin = 1
 
+-- Folding: prefer Treesitter, fallback to indent if no parser/feature
+opt.foldenable = true          -- ensure folds are active
+opt.foldlevel = 99             -- keep folds open by default, but available
+opt.foldlevelstart = 99
+
+local function apply_folds_for(win, buf)
+  win = win or vim.api.nvim_get_current_win()
+  buf = buf or vim.api.nvim_get_current_buf()
+  if not vim.api.nvim_win_is_valid(win) then return end
+
+  local ft = vim.bo[buf].filetype
+  local has_parsers, parsers = pcall(require, 'nvim-treesitter.parsers')
+  local has_new = type(vim.treesitter) == 'table' and type(vim.treesitter.foldexpr) == 'function'
+
+  if has_parsers and parsers.has_parser(ft) then
+    pcall(vim.api.nvim_set_option_value, 'foldmethod', 'expr', { win = win })
+    if has_new then
+      pcall(vim.api.nvim_set_option_value, 'foldexpr', 'v:lua.vim.treesitter.foldexpr()', { win = win })
+    else
+      pcall(vim.api.nvim_set_option_value, 'foldexpr', 'nvim_treesitter#foldexpr()', { win = win })
+    end
+  else
+    pcall(vim.api.nvim_set_option_value, 'foldmethod', 'indent', { win = win })
+    pcall(vim.api.nvim_set_option_value, 'foldexpr', '', { win = win })
+  end
+end
+
+-- Ensure folds are applied whenever a buffer gets a window or filetype is set
+autocmd('BufWinEnter', {
+  callback = function(args)
+    apply_folds_for(vim.api.nvim_get_current_win(), args.buf)
+  end,
+})
+autocmd('FileType', {
+  callback = function(args)
+    apply_folds_for(vim.api.nvim_get_current_win(), args.buf)
+  end,
+})
+
 --- keymaps ---
 
 km.set('n', '<leader>o', ':update<CR> :source<CR>', { silent = true, desc = "reload config" })
@@ -409,13 +614,22 @@ km.set('n', '<leader>qq', '<cmd>qa<CR>', { silent = true, desc = "quit all" })
 km.set('n', '<leader>lf', vim.lsp.buf.format, { desc = 'format file' })
 
 km.set('n', '<leader>e', ':Oil<CR>', { silent = true, desc = "Open file explorer" })
-km.set('n', '<leader><leader>', ':Pick files<CR>', { silent = true, desc = "find files" })
-km.set('n', '<leader>/', ':Pick live_grep<CR>', { silent = true, desc = "find in files" })
+-- km.set('n', '<leader><leader>', ':Pick files<CR>', { silent = true, desc = "find files" })
+km.set('n', '<leader><leader>', function() require('fff').find_files() end, { silent = true, desc = "find files" })
+km.set('n', 'ff', function() require('fff').find_files() end, { silent = true, desc = "find files" })
+km.set('n', '<leader>/', ':Pick grep_live<CR>', { silent = true, desc = "find in files" })
 km.set('n', '<leader>?', ':Pick help<CR>', { silent = true, desc = "search help" })
 km.set('n', '<leader>b', ':Pick buffers<CR>', { silent = true, desc = "search buffers" })
 km.set('n', '<leader>u', ':lua vim.pack.update(nil, { force = true })<CR>', { silent = true, desc = "update plugins" })
 
 km.set('n', '<leader>U', ':UndotreeToggle<CR>', { silent = true, desc = "undo tree" })
+
+-- folding convenience (mirrors built-in z-keys behind <leader>z*)
+km.set('n', '<leader>zz', 'za', { desc = 'toggle fold' })
+km.set('n', '<leader>zo', 'zO', { desc = 'open fold recursively' })
+km.set('n', '<leader>zc', 'zC', { desc = 'close fold recursively' })
+km.set('n', '<leader>zR', 'zR', { desc = 'open all folds' })
+km.set('n', '<leader>zM', 'zM', { desc = 'close all folds' })
 
 -- window management
 km.set('n', '<leader>|', '<C-w>v', { silent = true, desc = "split vertically" })
@@ -433,15 +647,44 @@ km.set('n', '<leader>tt', ":Twilight<CR>", { desc = "Toggle twilight" })
 km.set("n", "<leader>gg", "<cmd>lua _LAZYGIT_TOGGLE()<CR>", { desc = "Toggle lazygit" })
 km.set('n', '<leader>ta', "<cmd>lua require('supermaven-nvim.api').toggle()<CR>", { desc = "toggle ai"})
 
+-- GitHub/Git remote permalink keymaps via gitlinker
+km.set('n', '<leader>gy', function()
+  require('gitlinker').get_buf_range_url('n', { add_current_line_on_normal_mode = false })
+end, { desc = 'Copy Git link (file only)' })
+km.set('n', '<leader>gY', function()
+  require('gitlinker').get_buf_range_url('n', { add_current_line_on_normal_mode = true })
+end, { desc = 'Copy Git link (line)' })
+km.set('v', '<leader>gY', function()
+  require('gitlinker').get_buf_range_url('v')
+end, { desc = 'Copy Git link (selection)' })
+
 -- Disable terminal flow control to allow Ctrl+S (add `stty -ixon` to your shell config like .zshrc or .bashrc)
+-- Best effort: disable XON/XOFF so <C-s>/<C-q> reach Neovim (tmux or not)
+pcall(function()
+  if vim.fn.has('unix') == 1 then
+    -- Only attempt when attached to a tty; errors are ignored
+    vim.fn.system({ 'stty', '-ixon' })
+  end
+end)
 
--- For Ctrl+S in normal and visual modes
-km.set({'n', 'v'}, '<C-s>', ':update<CR>', { silent = true, noremap = true })
-km.set('v', '<C-s>', ':update<CR>', { silent = true, noremap = true })
+-- Smarter save in all common modes
+local function map_save(m, lhs)
+  km.set(m, lhs, function()
+    -- Preserve selection in visual/select, return to mode in terminal
+    local mode = vim.api.nvim_get_mode().mode
+    if mode == 't' then
+      vim.cmd('stopinsert')
+    end
+    smart_save()
+    if mode == 't' then
+      vim.cmd('startinsert')
+    elseif mode == 'v' or mode == 'V' or mode == string.char(22) then -- visual block is <C-v>
+      vim.cmd('silent! normal! gv')
+    end
+  end, { silent = true, noremap = true, desc = 'Smart save' })
+end
 
--- For Ctrl+S in insert mode (saves without leaving insert mode)
-km.set('i', '<C-s>', '<C-o>:update<CR>', { silent = true, noremap = true })
-
--- For Cmd+S (works in GUI Neovim like Neovide; in terminal, may require emulator config)
-km.set({'n', 'v'}, '<D-s>', ':update<CR>', { silent = true, noremap = true })
-km.set('i', '<D-s>', '<C-o>:update<CR>', { silent = true, noremap = true })
+for _, m in ipairs({ 'n', 'i', 'v', 'x', 's', 'o', 't', 'c' }) do
+  map_save(m, '<C-s>')
+  map_save(m, '<D-s>') -- In GUIs/terminals that send <D-s>
+end
